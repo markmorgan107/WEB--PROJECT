@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Level Up Life</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="login-container">
+    <div class="login-box">
+      <h1>Welcome Back</h1>
+      <p>Log in to continue your progress</p>
+
+      <form onsubmit="return validateLogin()" action = "">
+        <span id = "error" style="color: red;"></span>
+        <input type="email" id="email" placeholder="Email" >
+        <span id="emailerror" style="color: red;"></span>
+        <input type="password" id="password" placeholder="Password" >
+        <span id="passerror" style="color: red;"></span>
+        <button type="submit" class="btn btn-primary">Log In</button>
+      </form>
+
+      <p class="login-footer">
+        Forgot password? <br>Don’t have an account? <a href="#">Sign up</a>
+      </p>
+    </div>
+  </div>
+  <script src="webproject.js"></script>
+</body>
+</html>
