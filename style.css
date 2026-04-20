@@ -610,3 +610,106 @@ section {
   background-color: white;
   color: black;
 }
+
+/* Leaderboard Styles */
+.leaderboard-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+.leaderboard-table th, .leaderboard-table td {
+  padding: 16px;
+  text-align: left;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+.leaderboard-table th {
+  color: #9ca3af;
+  text-transform: uppercase;
+  font-size: 13px;
+  letter-spacing: 1px;
+}
+.leaderboard-table tr:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+.rank-1 td:first-child { color: #d4af37; font-weight: bold; font-size: 18px; }
+.rank-2 td:first-child { color: #c0c0c0; font-weight: bold; font-size: 18px; }
+.rank-3 td:first-child { color: #cd7f32; font-weight: bold; font-size: 18px; }
+
+/* Grid Layouts for Shop & Inventory */
+.grid-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 20px;
+}
+.shop-card, .inventory-card {
+  background: #171717;
+  padding: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  text-align: center;
+  transition: transform 0.3s ease, border-color 0.3s;
+}
+.shop-card:hover, .inventory-card:hover {
+  transform: translateY(-5px);
+  border-color: #d4af37;
+}
+.card-icon {
+  font-size: 48px;
+  margin-bottom: 15px;
+}
+.card-title {
+  font-size: 20px;
+  margin-bottom: 10px;
+  color: #ffffff;
+}
+.card-desc {
+  color: #9ca3af;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+.card-price {
+  color: #d4af37;
+  font-weight: bold;
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+/* Skill Tree Styles */
+.skill-tree-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+  margin-top: 20px;
+}
+.skill-node {
+  background: #202020;
+  padding: 24px;
+  border-radius: 12px;
+  text-align: center;
+  border: 1px solid rgba(255, 215, 0, 0.1);
+  position: relative;
+}
+.skill-node h4 {
+  margin-bottom: 10px;
+  color: #d4af37;
+}
+.skill-node p {
+  color: #9ca3af;
+  font-size: 14px;
+  margin-bottom: 15px;
+}
+.skill-level {
+  font-size: 24px;
+  font-weight: bold;
+  color: #fff;
+  margin-bottom: 10px;
+}
+
+@media (max-width: 1000px) {
+  .grid-cards, .skill-tree-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 700px) {
+  .grid-cards, .skill-tree-grid { grid-template-columns: 1fr; }
+  .leaderboard-table th, .leaderboard-table td { padding: 10px; }
+}
