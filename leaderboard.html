@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leaderboard - Level Up Life</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/png" href="arrow.png">
+</head>
+
+<body>
+  <div id="vanta-bg" style="position: fixed; z-index: -1; width: 100%; height: 100vh; top: 0; left: 0;"></div>
+
+  <nav class="navbar">
+    <div class="logo" style="display: flex; align-items: center; gap: 8px;">
+        <img src="arrow.png" style="height: 24px; width: auto;" alt="Logo">
+        Level Up Life
+    </div>
+    <div class="nav-links">
+      <a href="dashboard.html">Dashboard</a>
+      <a href="quests.html">Quests</a>
+      <a href="leaderboard.html">Leaderboard</a>
+      <a href="shop.html">Shop</a>
+      <a href="profile.html">Profile</a>
+      <a href="inventory.html">Inventory</a>
+      <a href="web project.html" class="nav-login">Log Out</a>
+    </div>
+  </nav>
+
+  <section style="padding-top: 150px; min-height: 100vh; padding-bottom: 100px;">
+    <div class="section-header center">
+      <span style="color: #d4af37;">The Arena</span>
+      <h2>Global Leaderboard</h2>
+      <p>See where you stand among the most disciplined users. Rise through the ranks by completing quests.</p>
+    </div>
+
+    <div class="dashboard-card" style="max-width: 900px;">
+      <table class="leaderboard-table">
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Avatar</th>
+            <th>User</th>
+            <th>Title</th>
+            <th>Total XP</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="rank-1">
+            <td>#1</td>
+            <td><div class="avatar" style="width: 40px; height: 40px; font-size: 16px;">S</div></td>
+            <td><strong>Sarah J.</strong></td>
+            <td>Grandmaster</td>
+            <td>15,420 XP</td>
+          </tr>
+          <tr class="rank-2">
+            <td>#2</td>
+            <td><div class="avatar" style="width: 40px; height: 40px; font-size: 16px; background: #c0c0c0;">M</div></td>
+            <td><strong>Marcus T.</strong></td>
+            <td>Elite Scholar</td>
+            <td>14,890 XP</td>
+          </tr>
+          <tr class="rank-3">
+            <td>#3</td>
+            <td><div class="avatar" style="width: 40px; height: 40px; font-size: 16px; background: #cd7f32;">K</div></td>
+            <td><strong>Kevin R.</strong></td>
+            <td>Iron Will</td>
+            <td>13,500 XP</td>
+          </tr>
+          <tr>
+            <td>#4</td>
+            <td><div class="avatar" style="width: 40px; height: 40px; font-size: 16px; background: #333; color: white;">A</div></td>
+            <td><strong>Alex Carter</strong></td>
+            <td>Productivity Builder</td>
+            <td>1,240 XP</td>
+          </tr>
+          <tr>
+            <td>#5</td>
+            <td><div class="avatar" style="width: 40px; height: 40px; font-size: 16px; background: #333; color: white;">E</div></td>
+            <td><strong>Elena V.</strong></td>
+            <td>Early Riser</td>
+            <td>1,150 XP</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p>© 2026 Level Up Life. All rights reserved.</p>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.net.min.js"></script>
+  <script>
+    VANTA.NET({
+      el: "#vanta-bg",
+      mouseControls: true, touchControls: true, gyroControls: false,
+      minHeight: 200.00, minWidth: 200.00, scale: 1.00, scaleMobile: 1.00,
+      color: 0xd4af37, backgroundColor: 0x0c0c0c
+    })
+  </script>
+</body>
+
+</html>
