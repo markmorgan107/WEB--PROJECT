@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile - Level Up Life</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/png" href="arrow.png">
+</head>
+
+<body>
+  <div id="vanta-bg" style="position: fixed; z-index: -1; width: 100%; height: 100vh; top: 0; left: 0;"></div>
+
+  <nav class="navbar">
+    <div class="logo" style="display: flex; align-items: center; gap: 8px;">
+        <img src="arrow.png" style="height: 24px; width: auto;" alt="Logo">
+        Level Up Life
+    </div>
+    <div class="nav-links">
+      <a href="dashboard.html">Dashboard</a>
+      <a href="quests.html">Quests</a>
+      <a href="leaderboard.html">Leaderboard</a>
+      <a href="shop.html">Shop</a>
+      <a href="profile.html">Profile</a>
+      <a href="inventory.html">Inventory</a>
+      <a href="web project.html" class="nav-login">Log Out</a>
+    </div>
+  </nav>
+
+  <section style="padding-top: 150px; min-height: 100vh; padding-bottom: 100px;">
+    <div class="section-header center">
+      <span style="color: #d4af37;">Deep Profile</span>
+      <h2>Skill Tree</h2>
+      <p>Analyze how your life choices are leveling up different aspects of your character.</p>
+    </div>
+
+    <div class="main-content" style="max-width: 900px; margin: 0 auto; width: 100%;">
+      <div class="dashboard-card" style="width: 100%; margin-bottom: 40px;">
+        <div class="profile-top">
+          <div class="avatar" style="width: 100px; height: 100px; font-size: 40px;">A</div>
+          <div>
+            <h3 style="font-size: 36px;">Alex Carter</h3>
+            <p style="font-size: 18px;">Level 8 • Productivity Builder</p>
+          </div>
+        </div>
+      </div>
+
+      <h3 style="text-align: left; width: 100%; font-size: 24px; margin-bottom: 20px;">Character Stats</h3>
+      <div class="skill-tree-grid">
+        <div class="skill-node">
+          <h4>Intellect 🧠</h4>
+          <div class="skill-level">Lvl 12</div>
+          <p>Books read, learning sessions, deep work.</p>
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: 60%;"></div>
+          </div>
+        </div>
+        <div class="skill-node">
+          <h4>Strength 💪</h4>
+          <div class="skill-level">Lvl 8</div>
+          <p>Workouts, diet adherence, steps.</p>
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: 85%;"></div>
+          </div>
+        </div>
+        <div class="skill-node">
+          <h4>Mindfulness 🧘</h4>
+          <div class="skill-level">Lvl 5</div>
+          <p>Meditation, journaling, yoga.</p>
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: 30%;"></div>
+          </div>
+        </div>
+        <div class="skill-node">
+          <h4>Charisma 🗣️</h4>
+          <div class="skill-level">Lvl 4</div>
+          <p>Networking, social events, public speaking.</p>
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: 45%;"></div>
+          </div>
+        </div>
+        <div class="skill-node">
+          <h4>Finance 💰</h4>
+          <div class="skill-level">Lvl 6</div>
+          <p>Savings goals, side hustles, budgeting.</p>
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: 70%;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p>© 2026 Level Up Life. All rights reserved.</p>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.net.min.js"></script>
+  <script>
+    VANTA.NET({
+      el: "#vanta-bg",
+      mouseControls: true, touchControls: true, gyroControls: false,
+      minHeight: 200.00, minWidth: 200.00, scale: 1.00, scaleMobile: 1.00,
+      color: 0xd4af37, backgroundColor: 0x0c0c0c
+    })
+  </script>
+</body>
+
+</html>
