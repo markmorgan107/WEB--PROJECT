@@ -1,0 +1,34 @@
+.quest-list {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.quest-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.quest-item h4 {
+  margin-bottom: 4px;
+  font-size: 17px;
+}
+
+.quest-item p {
+  color: #9ca3af;
+  font-size: 14px;
+}
+
+.status {
+  padding: 7px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #d1d5db;
+  font-size: 12px;
+}
+
+.status.done {
+  background: rgba(212, 175, 55, 0.18);
+  border-color: rgba(212, 175, 55, 0.35);
+  color: #f5d76e;
+}

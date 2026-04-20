@@ -1,0 +1,23 @@
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin-bottom: 28px;
+}
+
+.stat-box {
+  background: #202020;
+  padding: 22px;
+  text-align: center;
+}
+
+.stat-box strong {
+  display: block;
+  font-size: 28px;
+  margin-bottom: 6px;
+}
+
+.stat-box span {
+  color: #9ca3af;
+  font-size: 14px;
+}

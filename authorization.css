@@ -1,0 +1,96 @@
+/* Login */
+.login-container {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-box {
+  background: #171717;
+  padding: 40px;
+  width: 350px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  text-align: center;
+}
+
+.login-box h1 {
+  margin-bottom: 10px;
+}
+
+.login-box p {
+  color: #9ca3af;
+  margin-bottom: 20px;
+}
+
+.login-box input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  background: #202020;
+  border: none;
+  color: white;
+  border-radius: 6px;
+}
+
+.login-box button {
+  width: 100%;
+}
+
+.login-footer {
+  margin-top: 15px;
+  font-size: 14px;
+}
+
+.login-footer a {
+  color: #d4af37;
+  font-weight: bold;
+  transition: 0.3s ease;
+}
+
+.login-footer a:hover {
+  text-decoration: underline;
+  color: #f5d76e;
+}
+
+/* Signup */
+/* (Currently sharing styles with the login classes above) */
+
+/* Forgot Password */
+/* (Currently sharing styles with the login classes above) */
+
+.error-msg {
+  display: block;
+  font-size: 13px;
+  color: #ff4c4c;
+  text-align: left;
+  margin-top: -8px;
+  margin-bottom: 12px;
+  margin-left: 4px;
+}
+
+.error-msg:empty {
+  display: none;
+}
+
+.btn-home {
+  position: absolute;
+  top: 25px;
+  right: 30px;
+  padding: 10px 22px;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  background: black;
+  color: white;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  z-index: 1000;
+}
+
+.btn-home:hover {
+  background-color: white;
+  color: black;
+}
