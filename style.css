@@ -4,6 +4,37 @@
   box-sizing: border-box;
 }
 
+
+/* 
+intro animation test*/
+#intro-overlay {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  z-index: 9999;
+  display: none;
+  place-items: center;
+}
+
+#intro-arrow-wrap {
+  position: relative;
+}
+
+#arrow-bot,
+#arrow-top {
+  position: absolute;
+  will-change: transform;
+}
+
+#nav-logo-img {
+  height: 24px;
+  vertical-align: middle;
+  margin-right: 8px;
+  display: inline-block;
+}
+
+
+
 html {
   scroll-behavior: smooth;
   background-color: #0c0c0c;
@@ -418,9 +449,22 @@ section {
 
 
 @media (max-width: 1000px) {
-  .grid-cards, .skill-tree-grid { grid-template-columns: repeat(2, 1fr); }
+
+  .grid-cards,
+  .skill-tree-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
+
 @media (max-width: 700px) {
-  .grid-cards, .skill-tree-grid { grid-template-columns: 1fr; }
-  .leaderboard-table th, .leaderboard-table td { padding: 10px; }
+
+  .grid-cards,
+  .skill-tree-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .leaderboard-table th,
+  .leaderboard-table td {
+    padding: 10px;
+  }
 }

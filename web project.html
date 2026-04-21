@@ -11,10 +11,21 @@
 </head>
 
 <body>
+
+  <!-- Intro overlay: only shown on first visit (sessionStorage) -->
+  <div id="intro-overlay">
+    <div id="intro-arrow-wrap">
+      <img src="singlearrow.PNG" id="arrow-bot" alt="" />
+      <img src="singlearrow.PNG" id="arrow-top" alt="" />
+    </div>
+  </div>
   <div id="vanta-bg" style="position: fixed; z-index: -1; width: 100%; height: 100vh; top: 0; left: 0;"></div>
 
   <nav class="navbar">
-    <div class="logo">Level Up Life</div>
+    <div class="logo">
+      <img src="arrow.png" id="nav-logo-img" alt="Logo">
+      Level Up Life
+    </div>
     <div class="nav-links">
       <a href="#home">Home</a>
       <a href="#about">About Us</a>
@@ -233,6 +244,32 @@
   </footer>
 
   <script src="webproject.js"></script>
+  <!-- intro animation test -->
+  <script>
+    (function () {
+      if (sessionStorage.I) return; sessionStorage.I = 1;
+      var o = document.getElementById('intro-overlay'), n = document.getElementById('nav-logo-img');
+      o.style.display = 'grid'; n.style.opacity = '0';
+      addEventListener('load', function () {
+        var w = document.getElementById('intro-arrow-wrap'),
+          b = document.getElementById('arrow-bot'), t = document.getElementById('arrow-top'),
+          H = 72, W = Math.round(b.naturalWidth * H / b.naturalHeight) || 72;
+        w.style.width = W + 'px'; w.style.height = H + 'px';
+        [b, t].forEach(function (i) { i.style.cssText = 'width:' + W + 'px;height:' + H + 'px;top:0;left:0'; });
+        setTimeout(function () { t.style.transition = 'transform .45s cubic-bezier(0.34,1.56,0.64,1)'; t.style.transform = 'translateY(-' + H + 'px)'; }, 900);
+        setTimeout(function () {
+          var r = w.getBoundingClientRect(), nr = n.getBoundingClientRect(), s = nr.height / (2 * H);
+          w.style.cssText = 'position:fixed;left:' + r.left + 'px;top:' + r.top + 'px;width:' + W + 'px;height:' + H + 'px';
+          requestAnimationFrame(function () {
+            w.style.transition = 'transform 1.1s cubic-bezier(.42,0,.58,1)';
+            w.style.transform = 'translate(' + (nr.left + nr.width / 2 - r.left - W / 2) + 'px,' + (nr.top + nr.height / 2 - r.top - H / 2 + s * H / 2) + 'px) scale(' + s + ')';
+            o.style.transition = 'opacity 1s ease .15s'; o.style.opacity = '0';
+          });
+        }, 2050);
+        setTimeout(function () { o.style.display = 'none'; n.style.cssText = 'opacity:1;transition:opacity .35s ease'; }, 3300);
+      });
+    })();
+  </script>
 
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
   <script>AOS.init({ once: true, offset: 120 });</script>
