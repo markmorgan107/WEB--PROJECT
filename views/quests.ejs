@@ -15,8 +15,8 @@
 
   <nav class="navbar">
     <div class="logo" style="display: flex; align-items: center; gap: 8px;">
-        <img src="/images/arrow.png" style="height: 24px; width: auto;" alt="Logo">
-        Level Up Life
+      <img src="/images/arrow.png" style="height: 24px; width: auto;" alt="Logo">
+      Level Up Life
     </div>
     <div class="nav-links">
       <a href="/dashboard">Dashboard</a>
@@ -36,72 +36,143 @@
       <p>Accept daily tasks to gain XP, stack coins, and level up your discipline.</p>
     </div>
 
-    <% const easyQuests = typeof quests !== 'undefined' ? quests.filter(q => q.difficulty === 'easy') : []; %>
-    <% const mediumQuests = typeof quests !== 'undefined' ? quests.filter(q => q.difficulty === 'medium') : []; %>
-    <% const hardQuests = typeof quests !== 'undefined' ? quests.filter(q => q.difficulty === 'hard') : []; %>
+    <% const easyQuests=typeof quests !=='undefined' ? quests.filter(q=> q.difficulty === 'easy' && q.status !==
+      'requested') : []; %>
+      <% const mediumQuests=typeof quests !=='undefined' ? quests.filter(q=> q.difficulty === 'medium' && q.status !==
+        'requested') : []; %>
+        <% const hardQuests=typeof quests !=='undefined' ? quests.filter(q=> q.difficulty === 'hard' && q.status !==
+          'requested') : []; %>
+          <% const requestedQuests=typeof quests !=='undefined' ? quests.filter(q=> q.status === 'requested') : []; %>
 
-    <div class="dashboard-card" style="margin-bottom: 40px;">
-      <h3 style="margin-bottom: 20px; font-size: 22px; color: #d1d5db;">🟢 Easy</h3>
-      <div class="quest-list">
-        <% easyQuests.forEach(quest => { %>
-        <div class="quest-item">
-          <div>
-            <h4><%= quest.title %></h4>
-            <p>+<%= quest.xpReward %> XP</p>
-          </div>
-          <span class="status <%= quest.status === 'completed' ? 'done' : '' %>"
-            <% if (quest.status === 'pending') { %> onclick="acceptQuest('<%= quest._id %>')" style="cursor: pointer;" <% } %>
-            <% if (quest.status === 'active') { %> onclick="completeQuest('<%= quest._id %>')" style="cursor: pointer;" <% } %>
-          >
-            <%= quest.status === 'completed' ? 'Done' : (quest.status === 'active' ? 'Complete' : 'Accept') %>
-          </span>
-        </div>
-        <% }) %>
-        <% if(easyQuests.length === 0) { %><p style="color: #9ca3af;">No easy quests available.</p><% } %>
-      </div>
-    </div>
+            <!-- REQUEST A QUEST FORM -->
+            <div class="dashboard-card" style="margin-bottom: 40px;">
+              <h3 style="margin-bottom: 20px; font-size: 22px; color: #d4af37;">✨ Request a Custom Quest</h3>
+              <form id="requestQuestForm" onsubmit="submitQuestRequest(event)"
+                style="display: flex; flex-direction: column; gap: 15px;">
+                <div style="display: flex; flex-direction: column; gap: 5px;">
+                  <label for="questTitle" style="color: #9ca3af; font-size: 14px;">Quest Title</label>
+                  <input type="text" id="questTitle" name="title" required
+                    style="padding: 10px; border-radius: 5px; border: 1px solid #333; background: #111; color: white;">
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 5px;">
+                  <label for="questDescription" style="color: #9ca3af; font-size: 14px;">Quest Description</label>
+                  <textarea id="questDescription" name="description" required rows="3"
+                    style="padding: 10px; border-radius: 5px; border: 1px solid #333; background: #111; color: white; resize: vertical;"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary"
+                  style="align-self: flex-start; cursor: pointer; background: #d4af37; color: black; border: none; padding: 10px 20px; border-radius: 5px; font-weight: bold;">Submit
+                  Request</button>
+              </form>
+            </div>
 
-    <div class="dashboard-card" style="margin-bottom: 40px;">
-      <h3 style="margin-bottom: 20px; font-size: 22px; color: #d1d5db;">🟡 Medium</h3>
-      <div class="quest-list">
-        <% mediumQuests.forEach(quest => { %>
-        <div class="quest-item">
-          <div>
-            <h4><%= quest.title %></h4>
-            <p>+<%= quest.xpReward %> XP</p>
-          </div>
-          <span class="status <%= quest.status === 'completed' ? 'done' : '' %>"
-            <% if (quest.status === 'pending') { %> onclick="acceptQuest('<%= quest._id %>')" style="cursor: pointer;" <% } %>
-            <% if (quest.status === 'active') { %> onclick="completeQuest('<%= quest._id %>')" style="cursor: pointer;" <% } %>
-          >
-            <%= quest.status === 'completed' ? 'Done' : (quest.status === 'active' ? 'Complete' : 'Accept') %>
-          </span>
-        </div>
-        <% }) %>
-        <% if(mediumQuests.length === 0) { %><p style="color: #9ca3af;">No medium quests available.</p><% } %>
-      </div>
-    </div>
+            <!-- PENDING APPROVAL LIST -->
+            <% if (requestedQuests.length> 0) { %>
+              <div class="dashboard-card" style="margin-bottom: 40px;">
+                <h3 style="margin-bottom: 20px; font-size: 22px; color: #e5e7eb;">⏳ Pending Admin Approval</h3>
+                <div class="quest-list">
+                  <% requestedQuests.forEach(quest=> { %>
+                    <div class="quest-item"
+                      style="border-left: 4px solid #eab308; background: rgba(234, 179, 8, 0.05);">
+                      <div>
+                        <h4>
+                          <%= quest.title %>
+                        </h4>
+                        <p>
+                          <%= quest.description %>
+                        </p>
+                      </div>
+                      <span class="status" style="background: #374151; color: #9ca3af; cursor: default; border: none;">
+                        Pending
+                      </span>
+                    </div>
+                    <% }) %>
+                </div>
+              </div>
+              <% } %>
 
-    <div class="dashboard-card">
-      <h3 style="margin-bottom: 20px; font-size: 22px; color: #d1d5db;">🔴 Hard</h3>
-      <div class="quest-list">
-        <% hardQuests.forEach(quest => { %>
-        <div class="quest-item">
-          <div>
-            <h4><%= quest.title %></h4>
-            <p>+<%= quest.xpReward %> XP</p>
-          </div>
-          <span class="status <%= quest.status === 'completed' ? 'done' : '' %>"
-            <% if (quest.status === 'pending') { %> onclick="acceptQuest('<%= quest._id %>')" style="cursor: pointer;" <% } %>
-            <% if (quest.status === 'active') { %> onclick="completeQuest('<%= quest._id %>')" style="cursor: pointer;" <% } %>
-          >
-            <%= quest.status === 'completed' ? 'Done' : (quest.status === 'active' ? 'Complete' : 'Accept') %>
-          </span>
-        </div>
-        <% }) %>
-        <% if(hardQuests.length === 0) { %><p style="color: #9ca3af;">No hard quests available.</p><% } %>
-      </div>
-    </div>
+                <div class="dashboard-card" style="margin-bottom: 40px;">
+                  <h3 style="margin-bottom: 20px; font-size: 22px; color: #d1d5db;">🟢 Easy</h3>
+                  <div class="quest-list">
+                    <% easyQuests.forEach(quest=> { %>
+                      <div class="quest-item">
+                        <div>
+                          <h4>
+                            <%= quest.title %>
+                          </h4>
+                          <p>+<%= quest.xpReward %> XP</p>
+                        </div>
+                        <span class="status <%= quest.status === 'completed' ? 'done' : '' %>" <% if
+                          (quest.status==='pending' ) { %> onclick="acceptQuest('<%= quest._id %>')" style="cursor:
+                            pointer;" <% } %>
+                              <% if (quest.status==='active' ) { %> onclick="completeQuest('<%= quest._id %>')"
+                                  style="cursor: pointer;" <% } %>
+                                    >
+                                    <%= quest.status==='completed' ? 'Done' : (quest.status==='active' ? 'Complete'
+                                      : 'Accept' ) %>
+                        </span>
+                      </div>
+                      <% }) %>
+                        <% if(easyQuests.length===0) { %>
+                          <p style="color: #9ca3af;">No easy quests available.</p>
+                          <% } %>
+                  </div>
+                </div>
+
+                <div class="dashboard-card" style="margin-bottom: 40px;">
+                  <h3 style="margin-bottom: 20px; font-size: 22px; color: #d1d5db;">🟡 Medium</h3>
+                  <div class="quest-list">
+                    <% mediumQuests.forEach(quest=> { %>
+                      <div class="quest-item">
+                        <div>
+                          <h4>
+                            <%= quest.title %>
+                          </h4>
+                          <p>+<%= quest.xpReward %> XP</p>
+                        </div>
+                        <span class="status <%= quest.status === 'completed' ? 'done' : '' %>" <% if
+                          (quest.status==='pending' ) { %> onclick="acceptQuest('<%= quest._id %>')" style="cursor:
+                            pointer;" <% } %>
+                              <% if (quest.status==='active' ) { %> onclick="completeQuest('<%= quest._id %>')"
+                                  style="cursor: pointer;" <% } %>
+                                    >
+                                    <%= quest.status==='completed' ? 'Done' : (quest.status==='active' ? 'Complete'
+                                      : 'Accept' ) %>
+                        </span>
+                      </div>
+                      <% }) %>
+                        <% if(mediumQuests.length===0) { %>
+                          <p style="color: #9ca3af;">No medium quests available.</p>
+                          <% } %>
+                  </div>
+                </div>
+
+                <div class="dashboard-card">
+                  <h3 style="margin-bottom: 20px; font-size: 22px; color: #d1d5db;">🔴 Hard</h3>
+                  <div class="quest-list">
+                    <% hardQuests.forEach(quest=> { %>
+                      <div class="quest-item">
+                        <div>
+                          <h4>
+                            <%= quest.title %>
+                          </h4>
+                          <p>+<%= quest.xpReward %> XP</p>
+                        </div>
+                        <span class="status <%= quest.status === 'completed' ? 'done' : '' %>" <% if
+                          (quest.status==='pending' ) { %> onclick="acceptQuest('<%= quest._id %>')" style="cursor:
+                            pointer;" <% } %>
+                              <% if (quest.status==='active' ) { %> onclick="completeQuest('<%= quest._id %>')"
+                                  style="cursor: pointer;" <% } %>
+                                    >
+                                    <%= quest.status==='completed' ? 'Done' : (quest.status==='active' ? 'Complete'
+                                      : 'Accept' ) %>
+                        </span>
+                      </div>
+                      <% }) %>
+                        <% if(hardQuests.length===0) { %>
+                          <p style="color: #9ca3af;">No hard quests available.</p>
+                          <% } %>
+                  </div>
+                </div>
 
   </section>
 
