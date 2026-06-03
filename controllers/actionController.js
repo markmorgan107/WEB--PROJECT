@@ -93,3 +93,28 @@ exports.buyItem = async (req, res) => {
         res.status(500).json({ error: 'Server error' });
     }
 };
+
+exports.requestQuest = async (req, res) => {
+    try {
+        const { title, description } = req.body;
+        if (!title || !description) {
+            return res.status(400).json({ error: 'Title and description are required' });
+        }
+
+        const newQuest = new Quest({
+            title,
+            description,
+            xpReward: 0,
+            coinsReward: 0,
+            status: 'requested',
+            difficulty: 'easy',
+            userId: req.session.userId
+        });
+
+        await newQuest.save();
+        return res.json({ success: true, message: 'Quest request submitted successfully' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Server error' });
+    }
+};

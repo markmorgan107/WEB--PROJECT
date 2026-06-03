@@ -43,9 +43,12 @@ exports.getDashboard = async (req, res) => {
     try {
         const users = await User.find({ isAdmin: { $ne: true } }).sort({ date: -1 });
         const shopItems = await ShopItem.find().sort({ createdAt: -1 });
-
+        const requestedQuests = await Quest.find({ status: 'requested' }).populate('userId').sort({ createdAt: -1 });
 
         const quests = await Quest.aggregate([
+            {
+                $match: { status: { $ne: 'requested' } }
+            },
             {
                 $group: {
                     _id: "$title",
@@ -57,7 +60,7 @@ exports.getDashboard = async (req, res) => {
             }
         ]);
 
-        res.render('admin-dashboard', { users, shopItems, quests });
+        res.render('admin-dashboard', { users, shopItems, quests, requestedQuests });
     } catch (err) {
         console.error(err);
         res.status(500).send("Server Error");
@@ -146,4 +149,21 @@ exports.logout = (req, res) => {
         if (err) console.error(err);
         res.redirect('/admin/login');
     });
+};
+
+exports.postApproveQuest = async (req, res) => {
+    const questId = req.params.id;
+    const { xpReward, coinsReward, difficulty } = req.body;
+    try {
+        await Quest.findByIdAndUpdate(questId, {
+            xpReward: parseInt(xpReward) || 0,
+            coinsReward: parseInt(coinsReward) || 0,
+            difficulty,
+            status: 'pending'
+        });
+        res.redirect('/admin/dashboard?success=QuestApproved');
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Server Error");
+    }
 };
