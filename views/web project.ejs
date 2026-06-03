@@ -5,11 +5,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Level Up Life</title>
-  <link rel="stylesheet" href="style.css" />
-  <link rel="stylesheet" href="profile.css" />
-  <link rel="stylesheet" href="quests.css" />
-  <link rel="stylesheet" href="dashboard.css" />
-  <link rel="icon" type="image/png" href="arrow.png">
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="/css/profile.css" />
+  <link rel="stylesheet" href="/css/quests.css" />
+  <link rel="stylesheet" href="/css/dashboard.css" />
+  <link rel="icon" type="image/png" href="/images/arrow.png">
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 </head>
 
@@ -18,15 +18,15 @@
   <!-- Intro overlay: only shown on first visit (sessionStorage) -->
   <div id="intro-overlay">
     <div id="intro-arrow-wrap">
-      <img src="singlearrow.PNG" id="arrow-bot" alt="" />
-      <img src="singlearrow.PNG" id="arrow-top" alt="" />
+      <img src="/images/singlearrow.PNG" id="arrow-bot" alt="" />
+      <img src="/images/singlearrow.PNG" id="arrow-top" alt="" />
     </div>
   </div>
   <div id="vanta-bg" style="position: fixed; z-index: -1; width: 100%; height: 100vh; top: 0; left: 0;"></div>
 
   <nav class="navbar">
     <div class="logo">
-      <img src="arrow.png" id="nav-logo-img" alt="Logo">
+      <img src="/images/arrow.png" id="nav-logo-img" alt="Logo">
       Level Up Life
     </div>
     <div class="nav-links">
@@ -35,8 +35,9 @@
       <a href="#features">Features</a>
       <a href="#founder">Founder</a>
       <a href="#contact">Contact</a>
-      <a href="login.html" class="nav-login">Log In</a>
-      <a href="signup.html" class="nav-signup">Sign Up</a>
+      <a href="/login" class="nav-login">Log In</a>
+      <a href="/signup" class="nav-signup">Sign Up</a>
+      <a href="/admin/login" class="nav-admin">Admin Login</a>
     </div>
   </nav>
 
@@ -44,7 +45,7 @@
     <div class="main-overlay"></div>
     <div class="main-content">
       <div class="main-logo-container">
-        <img src="arrow.png" alt="Arrow Logo" class="main-logo-img">
+        <img src="/images/arrow.png" alt="Arrow Logo" class="main-logo-img">
         <span class="main-logo-text">Level Up Life</span>
       </div>
       <h1>Step into a more disciplined, focused, and rewarding way to grow</h1>
@@ -56,7 +57,7 @@
       </p>
 
       <div class="main-buttons">
-        <a href="login.html" class="btn btn-primary">Get Started</a>
+        <a href="/login" class="btn btn-primary">Get Started</a>
       </div>
     </div>
   </header>
@@ -246,7 +247,7 @@
     <p>© 2026 Level Up Life. All rights reserved.</p>
   </footer>
 
-  <script src="webproject.js"></script>
+  <script src="/js/webproject.js"></script>
   <!-- intro animation test -->
   <script>
     (function () {
