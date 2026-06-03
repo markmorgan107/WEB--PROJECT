@@ -8,6 +8,7 @@ router.get('/logout', adminController.logout);
 
 router.get('/dashboard', adminController.requireAdmin, adminController.getDashboard);
 router.post('/quests/add', adminController.requireAdmin, adminController.postAddQuest);
+router.post('/quests/:id/approve', adminController.requireAdmin, adminController.postApproveQuest);
 router.post('/quests/edit', adminController.requireAdmin, adminController.postEditQuest);
 router.post('/quests/remove', adminController.requireAdmin, adminController.postRemoveQuest);
 router.post('/shop/add', adminController.requireAdmin, adminController.postAddShopItem);
