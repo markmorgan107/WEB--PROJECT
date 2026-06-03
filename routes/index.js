@@ -15,6 +15,7 @@ router.get('/signup', pageController.getSignup);
 router.get('/forgot-password', pageController.getForgotPassword);
 
 
+router.post('/api/quests/request', pageController.requireAuth, actionController.requestQuest);
 router.post('/api/quests/:id/accept', pageController.requireAuth, actionController.acceptQuest);
 router.post('/api/quests/:id/complete', pageController.requireAuth, actionController.completeQuest);
 router.post('/api/shop/buy/:id', pageController.requireAuth, actionController.buyItem);

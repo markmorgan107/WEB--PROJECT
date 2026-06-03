@@ -59,3 +59,29 @@ async function buyItem(itemId) {
         alert('Server error while purchasing item');
     }
 }
+
+async function submitQuestRequest(event) {
+    event.preventDefault();
+    const title = document.getElementById('questTitle').value;
+    const description = document.getElementById('questDescription').value;
+
+    try {
+        const response = await fetch('/api/quests/request', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ title, description })
+        });
+        const result = await response.json();
+        if (result.success) {
+            alert('Quest request submitted successfully! Pending admin approval.');
+            window.location.reload();
+        } else {
+            alert(result.error || 'Failed to submit quest request');
+        }
+    } catch (err) {
+        console.error(err);
+        alert('Server error while submitting request');
+    }
+}
