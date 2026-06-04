@@ -19,7 +19,7 @@ const QuestSchema = new mongoose.Schema({
     },
     status: {
         type: String,
-        enum: ['active', 'completed', 'pending', 'requested'],
+        enum: ['active', 'completed', 'pending', 'requested', 'pending_review', 'approved', 'rejected'],
         default: 'pending'
     },
     difficulty: {
@@ -38,6 +38,9 @@ const QuestSchema = new mongoose.Schema({
     },
     completedAt: {
         type: Date
+    },
+    proofImage: {
+        type: String
     }
 });
 

@@ -109,6 +109,7 @@ exports.getQuests = async (req, res) => {
     try {
         const quests = await Quest.find({ userId: req.session.userId }).sort({ createdAt: -1 });
         context.quests = quests;
+        context.userId = req.session.userId;
         res.render('quests', context);
     } catch (err) {
         console.error(err);
