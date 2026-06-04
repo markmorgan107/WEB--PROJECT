@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const pageController = require('../controllers/pageController');
 const actionController = require('../controllers/actionController');
+const upload = require('../middleware/uploadMiddleware');
 
 router.get('/', pageController.getHomePage);
 router.get('/dashboard', pageController.requireAuth, pageController.getDashboard);
@@ -19,5 +20,7 @@ router.post('/api/quests/request', pageController.requireAuth, actionController.
 router.post('/api/quests/:id/accept', pageController.requireAuth, actionController.acceptQuest);
 router.post('/api/quests/:id/complete', pageController.requireAuth, actionController.completeQuest);
 router.post('/api/shop/buy/:id', pageController.requireAuth, actionController.buyItem);
+router.post('/api/quests/submit-proof', pageController.requireAuth, upload.single('proof'), actionController.submitProof);
+
 
 module.exports = router;
