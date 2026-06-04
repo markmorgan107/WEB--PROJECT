@@ -176,6 +176,30 @@
 
   </section>
 
+    <!-- Proof Submission Section -->
+    <section style="padding-top: 50px; min-height: 30vh; padding-bottom: 100px; background: #111;">
+        <div class="section-header center">
+            <span style="color: #d4af37;">Submit Proof</span>
+            <h2>Upload Proof for Completed Quest</h2>
+            <p>Select one of your active quests and upload a photo as proof for admin review.</p>
+        </div>
+        <form action="/api/quests/submit-proof" method="POST" enctype="multipart/form-data" style="display:flex; flex-direction:column; gap:15px; max-width:400px; margin:auto;">
+            <label for="questId" style="color:#9ca3af;">Select Quest:</label>
+            <select name="questId" id="questId" required style="padding:10px; border-radius:5px; background:#222; color:white; border:1px solid #333;">
+                <% if (typeof quests !== 'undefined') { %>
+                    <% quests.filter(q => q.status === 'active' && q.userId && q.userId._id == userId).forEach(q => { %>
+                        <option value="<%= q._id %>"><%= q.title %></option>
+                    <% }) %>
+                <% } %>
+            </select>
+            <label for="proof" style="color:#9ca3af;">Proof Image:</label>
+            <input type="file" name="proof" id="proof" accept="image/*" required style="padding:5px; background:#222; color:white; border:1px solid #333;"/>
+            <button type="submit" style="background:#22c55e; color:white; border:none; padding:10px 20px; border-radius:4px; cursor:pointer;">Submit Proof</button>
+        </form>
+    </section>
+
+
+
   <footer class="footer">
     <p>© 2026 Level Up Life. All rights reserved.</p>
   </footer>

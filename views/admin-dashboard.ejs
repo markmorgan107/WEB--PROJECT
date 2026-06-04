@@ -125,6 +125,53 @@
             </div>
         </div>
 
+        <!-- Proof submissions -->
+        <div class="dashboard-card" style="margin-bottom: 40px;">
+            <h3 style="margin-bottom: 20px; font-size: 22px; color: #ff4d4d;">📸 Proof Submissions</h3>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th>Quest</th>
+                            <th>Proof</th>
+                            <th>Review</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% if (typeof pendingProofs !== 'undefined' && pendingProofs.length > 0) { %>
+                            <% pendingProofs.forEach(proof => { %>
+                                <tr>
+                                    <td style="font-weight: bold; color: #d4af37;"><%= proof.userId ? proof.userId.name : 'Unknown User' %></td>
+                                    <td><%= proof.title %></td>
+                                    <td><img src="/uploads/<%= proof.proofImage %>" alt="Proof" style="max-width:150px;"/></td>
+                                    <td>
+                                        <form action="/admin/quests/<%= proof._id %>/review-proof" method="POST" style="display:flex; flex-direction:column; gap:5px;">
+                                            <input type="hidden" name="decision" value="approve"/>
+                                            <input type="number" name="xpReward" placeholder="XP" required style="width:80px;"/>
+                                            <input type="number" name="coinsReward" placeholder="Coins" required style="width:80px;"/>
+                                            <select name="difficulty" required style="width:100px;">
+                                                <option value="easy">Easy</option>
+                                                <option value="medium">Medium</option>
+                                                <option value="hard">Hard</option>
+                                            </select>
+                                            <button type="submit" style="background:#22c55e;color:white;border:none;padding:6px 12px;border-radius:4px;cursor:pointer;">Approve</button>
+                                        </form>
+                                        <form action="/admin/quests/<%= proof._id %>/review-proof" method="POST" style="margin-top:5px;">
+                                            <input type="hidden" name="decision" value="reject"/>
+                                            <button type="submit" style="background:red;color:white;border:none;padding:6px 12px;border-radius:4px;cursor:pointer;">Reject</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            <% }) %>
+                        <% } else { %>
+                            <tr><td colspan="4">No pending proof submissions.</td></tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
         <!--add quest section -->
         <div class="dashboard-card" style="margin-bottom: 40px;">
             <h3 style="margin-bottom: 20px; font-size: 22px;">Add Quest to All Users</h3>
