@@ -60,7 +60,9 @@ exports.getDashboard = async (req, res) => {
             }
         ]);
 
-        res.render('admin-dashboard', { users, shopItems, quests, requestedQuests });
+        const pendingProofs = await Quest.find({ status: 'pending_review' }).populate('userId').sort({ createdAt: -1 });
+
+        res.render('admin-dashboard', { users, shopItems, quests, requestedQuests, pendingProofs });
     } catch (err) {
         console.error(err);
         res.status(500).send("Server Error");
@@ -159,11 +161,40 @@ exports.postApproveQuest = async (req, res) => {
             xpReward: parseInt(xpReward) || 0,
             coinsReward: parseInt(coinsReward) || 0,
             difficulty,
-            status: 'pending'
+            status: 'approved'
         });
         res.redirect('/admin/dashboard?success=QuestApproved');
     } catch (err) {
         console.error(err);
         res.status(500).send("Server Error");
+    }
+};
+
+// Review proof submitted by user
+exports.postReviewProof = async (req, res) => {
+    const questId = req.params.id;
+    const { decision, xpReward, coinsReward, difficulty } = req.body;
+    try {
+        const quest = await Quest.findById(questId);
+        if (!quest) return res.status(404).send('Quest not found');
+        if (decision === 'approve') {
+            // Update rewards and mark as approved (no user reward yet)
+            quest.xpReward = parseInt(xpReward) || quest.xpReward;
+            quest.coinsReward = parseInt(coinsReward) || quest.coinsReward;
+            quest.difficulty = difficulty || quest.difficulty;
+            quest.status = 'approved';
+            await quest.save();
+            return res.redirect('/admin/dashboard?success=ProofApproved');
+        } else if (decision === 'reject') {
+            quest.status = 'rejected';
+            quest.proofImage = undefined;
+            await quest.save();
+            return res.redirect('/admin/dashboard?success=ProofRejected');
+        } else {
+            return res.status(400).send('Invalid decision');
+        }
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server Error');
     }
 };

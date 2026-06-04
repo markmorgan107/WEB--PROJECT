@@ -33,26 +33,20 @@ exports.completeQuest = async (req, res) => {
             return res.status(404).json({ error: 'Quest not found' });
         }
 
-        if (quest.status === 'active') {
-            quest.status = 'completed';
-            quest.completedAt = new Date();
-            await quest.save();
+        if (quest.status === 'approved') {
+          // Grant rewards (already granted on approval, but ensure user receives them)
+          const user = await User.findById(req.session.userId);
+          user.xp += quest.xpReward || 0;
+          user.coins += quest.coinsReward || 0;
+          await user.save();
 
+          quest.status = 'completed';
+          quest.completedAt = new Date();
+          await quest.save();
 
-            const user = await User.findById(req.session.userId);
-            user.xp += quest.xpReward || 0;
-            user.coins += quest.coinsReward || 0;
-
-
-            const newLevel = Math.floor(user.xp / 1000) + 1;
-            if (newLevel > user.level) {
-                user.level = newLevel;
-            }
-
-            await user.save();
-            return res.json({ success: true, message: 'Quest completed', xpEarned: quest.xpReward, coinsEarned: quest.coinsReward });
+          return res.json({ success: true, message: 'Quest completed', xpEarned: quest.xpReward, coinsEarned: quest.coinsReward });
         } else {
-            return res.status(400).json({ error: 'Quest is not active' });
+          return res.status(400).json({ error: 'Quest is not approved yet' });
         }
     } catch (error) {
         console.error(error);
@@ -117,4 +111,28 @@ exports.requestQuest = async (req, res) => {
         console.error(error);
         res.status(500).json({ error: 'Server error' });
     }
+};
+// Submit proof image for quest completion (admin review)
+exports.submitProof = async (req, res) => {
+  try {
+    const questId = req.body.questId;
+    const quest = await Quest.findOne({ _id: questId, userId: req.session.userId });
+    if (!quest) {
+      return res.status(404).json({ error: 'Quest not found' });
+    }
+    // Allow submission if quest is in requested or pending state
+    if (!['requested', 'pending', 'active'].includes(quest.status)) {
+      return res.status(400).json({ error: 'Cannot submit proof for this quest' });
+    }
+    if (!req.file) {
+      return res.status(400).json({ error: 'Proof image required' });
+    }
+    quest.proofImage = req.file.filename;
+    quest.status = 'pending_review';
+    await quest.save();
+    return res.json({ success: true, message: 'Proof submitted for admin review' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Server error' });
+  }
 };
