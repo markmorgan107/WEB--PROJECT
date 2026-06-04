@@ -19,23 +19,19 @@ async function acceptQuest(questId) {
 }
 
 async function completeQuest(questId) {
-    try {
-        const response = await fetch(`/api/quests/${questId}/complete`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        const result = await response.json();
-        if (result.success) {
-            alert(`Quest Completed! Earned ${result.xpEarned} XP and ${result.coinsEarned} Coins.`);
-            window.location.reload();
-        } else {
-            alert(result.error || 'Failed to complete quest');
-        }
-    } catch (err) {
-        console.error(err);
-        alert('Server error while completing quest');
+    // Scroll to proof submission instead of calling obsolete direct complete endpoint
+    scrollToProof(questId);
+}
+
+function scrollToProof(questId) {
+    const select = document.getElementById('questId');
+    if (select) {
+        select.value = questId;
+    }
+    // Find the proof submission section header or form
+    const form = document.querySelector('form[action="/api/quests/submit-proof"]');
+    if (form) {
+        form.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 }
 

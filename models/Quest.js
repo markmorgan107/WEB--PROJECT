@@ -5,8 +5,10 @@ const QuestSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    description: {
+    skill: {
         type: String,
+        enum: ['finance','mindfulness','charisma','intellect','strength'],
+        default: 'mindfulness',
         required: true
     },
     xpReward: {

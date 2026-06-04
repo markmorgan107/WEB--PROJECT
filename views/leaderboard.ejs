@@ -55,8 +55,8 @@
                 <td>#<%= index + 1 %></td>
                 <td><div class="avatar" style="width: 40px; height: 40px; font-size: 16px; <%= index === 1 ? 'background: #c0c0c0;' : (index === 2 ? 'background: #cd7f32;' : (index > 2 ? 'background: #333; color: white;' : '')) %>"><%= user.name ? user.name.charAt(0).toUpperCase() : '?' %></div></td>
                 <td><strong><%= user.name || 'Unknown' %></strong></td>
-                <td>Level <%= user.level %></td>
-                <td><%= user.xp.toLocaleString() %> XP</td>
+                <td>Level <%= user.level || 1 %></td>
+                <td><%= (user.totalXp || 0).toLocaleString() %> XP</td>
               </tr>
             <% }) %>
           <% } else { %>

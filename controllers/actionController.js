@@ -11,7 +11,7 @@ exports.acceptQuest = async (req, res) => {
             return res.status(404).json({ error: 'Quest not found' });
         }
 
-        if (quest.status === 'pending') {
+        if (quest.status === 'requested' || quest.status === 'pending' || quest.status === 'approved') {
             quest.status = 'active';
             await quest.save();
             return res.json({ success: true, message: 'Quest accepted' });
@@ -130,7 +130,7 @@ exports.submitProof = async (req, res) => {
     quest.proofImage = req.file.filename;
     quest.status = 'pending_review';
     await quest.save();
-    return res.json({ success: true, message: 'Proof submitted for admin review' });
+    res.redirect('/quests?msg=proof_submitted');
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Server error' });

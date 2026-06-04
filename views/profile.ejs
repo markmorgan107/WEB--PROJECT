@@ -55,8 +55,16 @@
             <h4><%= skill.name %></h4>
             <div class="skill-level">Lvl <%= skill.level %></div>
             <p><%= skill.description %></p>
+            <% const nextLevelReq = requiredXpForLevel(skill.level + 1); %>
+            <% let xpToCurrentLevel = 0; for (let l = 2; l <= skill.level; l++) { xpToCurrentLevel += requiredXpForLevel(l); } %>
+            <% const xpInLevel = Math.max(0, skill.xp - xpToCurrentLevel); %>
+            <% const percent = Math.min(100, Math.round((xpInLevel / nextLevelReq) * 100)); %>
+            <div style="display: flex; justify-content: space-between; margin-top: 10px; margin-bottom: 5px; font-size: 13px; color: #a3a3a3;">
+              <span>Progress to Lvl <%= skill.level + 1 %></span>
+              <span><%= xpInLevel %>/<%= nextLevelReq %> XP</span>
+            </div>
             <div class="progress-bar">
-              <div class="progress-fill" style="width: <%= (skill.xp % 1000) / 10 %>%;"></div>
+              <div class="progress-fill" style="width: <%= percent %>%;"></div>
             </div>
           </div>
           <% }) %>

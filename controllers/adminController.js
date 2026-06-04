@@ -2,6 +2,7 @@ const bcrypt = require('bcryptjs');
 const User = require('../models/User');
 const Quest = require('../models/Quest');
 const ShopItem = require('../models/ShopItem');
+const Skill = require('../models/Skill');
 
 exports.requireAdmin = (req, res, next) => {
     if (!req.session || !req.session.userId || !req.session.isAdmin) {
@@ -70,12 +71,13 @@ exports.getDashboard = async (req, res) => {
 };
 
 exports.postAddQuest = async (req, res) => {
-    const { title, description, xpReward, coinsReward, difficulty } = req.body;
+    const { title, description, skill, xpReward, coinsReward, difficulty } = req.body;
     try {
         const users = await User.find({ isAdmin: { $ne: true } });
         const questsToInsert = users.map(user => ({
             title,
             description,
+            skill,
             xpReward: parseInt(xpReward) || 0,
             coinsReward: parseInt(coinsReward) || 0,
             difficulty,
@@ -94,11 +96,11 @@ exports.postAddQuest = async (req, res) => {
 };
 
 exports.postEditQuest = async (req, res) => {
-    const { oldTitle, title, description, xpReward, coinsReward, difficulty } = req.body;
+    const { oldTitle, title, description, xpReward, coinsReward, difficulty, skill } = req.body;
     try {
         await Quest.updateMany(
             { title: oldTitle },
-            { $set: { title, description, xpReward: parseInt(xpReward) || 0, coinsReward: parseInt(coinsReward) || 0, difficulty } }
+            { $set: { title, description, xpReward: parseInt(xpReward) || 0, coinsReward: parseInt(coinsReward) || 0, difficulty, skill: skill || 'mindfulness' } }
         );
         res.redirect('/admin/dashboard?success=QuestEdited');
     } catch (err) {
@@ -170,7 +172,6 @@ exports.postApproveQuest = async (req, res) => {
     }
 };
 
-// Review proof submitted by user
 exports.postReviewProof = async (req, res) => {
     const questId = req.params.id;
     const { decision, xpReward, coinsReward, difficulty } = req.body;
@@ -178,11 +179,40 @@ exports.postReviewProof = async (req, res) => {
         const quest = await Quest.findById(questId);
         if (!quest) return res.status(404).send('Quest not found');
         if (decision === 'approve') {
-            // Update rewards and mark as approved (no user reward yet)
-            quest.xpReward = parseInt(xpReward) || quest.xpReward;
-            quest.coinsReward = parseInt(coinsReward) || quest.coinsReward;
-            quest.difficulty = difficulty || quest.difficulty;
-            quest.status = 'approved';
+
+            const userId = quest.userId;
+
+            let userSkill = await Skill.findOne({
+                userId,
+                name: { $regex: new RegExp(`^${quest.skill}$`, 'i') }
+            });
+            if (!userSkill) {
+                const capitalizedName = quest.skill.charAt(0).toUpperCase() + quest.skill.slice(1);
+                userSkill = new Skill({
+                    userId,
+                    name: capitalizedName,
+                    level: 1,
+                    xp: 0,
+                    description: `${capitalizedName} skill`,
+                    updatedAt: new Date()
+                });
+            }
+
+            const { calculateLevelFromTotalXp } = require('../utils/xp');
+            userSkill.xp += quest.xpReward;
+            userSkill.level = calculateLevelFromTotalXp(userSkill.xp);
+            await userSkill.save();
+
+            const User = require('../models/User');
+            const user = await User.findById(userId);
+            if (user) {
+                user.totalXp = (user.totalXp || 0) + quest.xpReward;
+                user.level = calculateLevelFromTotalXp(user.totalXp);
+                user.coins = (user.coins || 0) + (quest.coinsReward || 0);
+                await user.save();
+            }
+            quest.status = 'completed';
+            quest.completedAt = new Date();
             await quest.save();
             return res.redirect('/admin/dashboard?success=ProofApproved');
         } else if (decision === 'reject') {

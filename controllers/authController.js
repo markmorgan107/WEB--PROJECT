@@ -69,7 +69,8 @@ exports.postSignup = async (req, res) => {
                     description: { $first: "$description" },
                     xpReward: { $first: "$xpReward" },
                     coinsReward: { $first: "$coinsReward" },
-                    difficulty: { $first: "$difficulty" }
+                    difficulty: { $first: "$difficulty" },
+                    skill: { $first: "$skill" }
                 }
             }
         ]);
@@ -80,6 +81,7 @@ exports.postSignup = async (req, res) => {
             xpReward: q.xpReward || 0,
             coinsReward: q.coinsReward || 0,
             difficulty: q.difficulty,
+            skill: q.skill || 'mindfulness',
             status: 'pending',
             userId: newUser._id
         }));

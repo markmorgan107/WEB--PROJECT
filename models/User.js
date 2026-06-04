@@ -18,7 +18,8 @@ const UserSchema = new mongoose.Schema({
         type: Number,
         default: 1
     },
-    xp: {
+
+    totalXp: {
         type: Number,
         default: 0
     },

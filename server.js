@@ -36,6 +36,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 const User = require('./models/User');
 const ShopItem = require('./models/ShopItem');
+const Quest = require('./models/Quest');
 const bcrypt = require('bcryptjs');
 
 
@@ -48,6 +49,20 @@ mongoose.connect(process.env.MONGO_URI, {
 
 
         try {
+            // Run Schema Migrations for existing database records
+
+            await Quest.updateMany(
+                { skill: { $exists: false } },
+                { $set: { skill: 'mindfulness' } }
+            );
+            await User.updateMany(
+                { level: { $exists: false } },
+                { $set: { level: 1 } }
+            );
+            await User.updateMany(
+                { totalXp: { $exists: false } },
+                { $set: { totalXp: 0 } }
+            );
 
             const adminCount = await User.countDocuments({ isAdmin: true });
             let defaultAdmin;
@@ -60,18 +75,17 @@ mongoose.connect(process.env.MONGO_URI, {
             }
 
 
-            const Quest = require('./models/Quest');
             const questCount = await Quest.countDocuments();
             if (questCount === 0 && defaultAdmin) {
                 await Quest.insertMany([
-                    { title: 'Drink 2 Liters of Water', description: 'Stay hydrated', xpReward: 10, coinsReward: 5, difficulty: 'easy', userId: defaultAdmin._id, status: 'pending' },
-                    { title: 'Make the bed', description: 'Start the day right', xpReward: 10, coinsReward: 5, difficulty: 'easy', userId: defaultAdmin._id, status: 'pending' },
-                    { title: 'No phone for 30 mins after waking', description: 'Mindful morning', xpReward: 15, coinsReward: 5, difficulty: 'easy', userId: defaultAdmin._id, status: 'pending' },
-                    { title: 'Read 15 pages', description: 'Read a non-fiction book', xpReward: 25, coinsReward: 10, difficulty: 'medium', userId: defaultAdmin._id, status: 'pending' },
-                    { title: 'Clean workspace', description: 'Organize your desk', xpReward: 25, coinsReward: 10, difficulty: 'medium', userId: defaultAdmin._id, status: 'pending' },
-                    { title: '20-minute walk', description: 'Get some fresh air', xpReward: 30, coinsReward: 15, difficulty: 'medium', userId: defaultAdmin._id, status: 'pending' },
-                    { title: '45-minute strict workout', description: 'Push your limits', xpReward: 50, coinsReward: 25, difficulty: 'hard', userId: defaultAdmin._id, status: 'pending' },
-                    { title: 'Deep work block (2 Hours)', description: 'Uninterrupted focus', xpReward: 75, coinsReward: 35, difficulty: 'hard', userId: defaultAdmin._id, status: 'pending' }
+                    { title: 'Drink 2 Liters of Water', description: 'Stay hydrated', skill: 'mindfulness', xpReward: 10, coinsReward: 5, difficulty: 'easy', userId: defaultAdmin._id, status: 'pending' },
+                    { title: 'Make the bed', description: 'Start the day right', skill: 'mindfulness', xpReward: 10, coinsReward: 5, difficulty: 'easy', userId: defaultAdmin._id, status: 'pending' },
+                    { title: 'No phone for 30 mins after waking', description: 'Mindful morning', skill: 'mindfulness', xpReward: 15, coinsReward: 5, difficulty: 'easy', userId: defaultAdmin._id, status: 'pending' },
+                    { title: 'Read 15 pages', description: 'Read a non-fiction book', skill: 'intellect', xpReward: 25, coinsReward: 10, difficulty: 'medium', userId: defaultAdmin._id, status: 'pending' },
+                    { title: 'Clean workspace', description: 'Organize your desk', skill: 'mindfulness', xpReward: 25, coinsReward: 10, difficulty: 'medium', userId: defaultAdmin._id, status: 'pending' },
+                    { title: '20-minute walk', description: 'Get some fresh air', skill: 'strength', xpReward: 30, coinsReward: 15, difficulty: 'medium', userId: defaultAdmin._id, status: 'pending' },
+                    { title: '45-minute strict workout', description: 'Push your limits', skill: 'strength', xpReward: 50, coinsReward: 25, difficulty: 'hard', userId: defaultAdmin._id, status: 'pending' },
+                    { title: 'Deep work block (2 Hours)', description: 'Uninterrupted focus', skill: 'intellect', xpReward: 75, coinsReward: 35, difficulty: 'hard', userId: defaultAdmin._id, status: 'pending' }
                 ]);
                 console.log('Default platform quests seeded.');
             }

@@ -99,7 +99,7 @@
                           <h4>
                             <%= quest.title %>
                           </h4>
-                          <p>+<%= quest.xpReward %> XP</p>
+                          <p>+<%= quest.xpReward %> XP • <span style="text-transform: capitalize; color: #d4af37; font-size: 13px;"><%= quest.skill || 'mindfulness' %></span></p>
                         </div>
                         <span class="status <%= quest.status === 'completed' ? 'done' : '' %>" <% if
                           (quest.status==='pending' ) { %> onclick="acceptQuest('<%= quest._id %>')" style="cursor:
@@ -127,7 +127,7 @@
                           <h4>
                             <%= quest.title %>
                           </h4>
-                          <p>+<%= quest.xpReward %> XP</p>
+                          <p>+<%= quest.xpReward %> XP • <span style="text-transform: capitalize; color: #d4af37; font-size: 13px;"><%= quest.skill || 'mindfulness' %></span></p>
                         </div>
                         <span class="status <%= quest.status === 'completed' ? 'done' : '' %>" <% if
                           (quest.status==='pending' ) { %> onclick="acceptQuest('<%= quest._id %>')" style="cursor:
@@ -155,7 +155,7 @@
                           <h4>
                             <%= quest.title %>
                           </h4>
-                          <p>+<%= quest.xpReward %> XP</p>
+                          <p>+<%= quest.xpReward %> XP • <span style="text-transform: capitalize; color: #d4af37; font-size: 13px;"><%= quest.skill || 'mindfulness' %></span></p>
                         </div>
                         <span class="status <%= quest.status === 'completed' ? 'done' : '' %>" <% if
                           (quest.status==='pending' ) { %> onclick="acceptQuest('<%= quest._id %>')" style="cursor:
@@ -187,7 +187,7 @@
             <label for="questId" style="color:#9ca3af;">Select Quest:</label>
             <select name="questId" id="questId" required style="padding:10px; border-radius:5px; background:#222; color:white; border:1px solid #333;">
                 <% if (typeof quests !== 'undefined') { %>
-                    <% quests.filter(q => q.status === 'active' && q.userId && q.userId._id == userId).forEach(q => { %>
+                    <% quests.filter(q => q.status === 'active').forEach(q => { %>
                         <option value="<%= q._id %>"><%= q.title %></option>
                     <% }) %>
                 <% } %>
