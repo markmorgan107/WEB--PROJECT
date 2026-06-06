@@ -11,7 +11,7 @@ async function getUserContext(req) {
     }
 
     try {
-        const user = await User.findById(req.session.userId).select('name level totalXp coins');
+        const user = await User.findById(req.session.userId).select('name level totalXp coins streak lastCompletedDate');
         if (!user) {
             return null;
         }
@@ -20,7 +20,8 @@ async function getUserContext(req) {
             username: user.name || 'User',
             level: user.level || 1,
             totalXp: user.totalXp || 0,
-            coins: user.coins || 0
+            coins: user.coins || 0,
+            streak: user.streak || 0
         };
     } catch (err) {
         console.error('Error fetching user context:', err);
