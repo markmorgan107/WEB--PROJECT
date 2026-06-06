@@ -17,10 +17,10 @@ async function getUserContext(req) {
         }
 
         return {
-            username: user.name,
-            level: user.level,
-            totalXp: user.totalXp,
-            coins: user.coins
+            username: user.name || 'User',
+            level: user.level || 1,
+            totalXp: user.totalXp || 0,
+            coins: user.coins || 0
         };
     } catch (err) {
         console.error('Error fetching user context:', err);
@@ -82,7 +82,25 @@ exports.getDashboard = async (req, res) => {
     }
     try {
         const quests = await ensureUserQuests(req.session.userId);
-        context.quests = quests.slice(0, 3);
+        // Only show quests that are active or pending (not completed, pending_review, requested, or rejected)
+        const activeOrPendingQuests = quests.filter(q => q.status === 'pending' || q.status === 'active');
+        context.quests = activeOrPendingQuests.slice(0, 3);
+
+        // Fetch completed quests that have not notified the user yet
+        const unnotifiedCompleted = await Quest.find({ userId: req.session.userId, status: 'completed', notified: { $ne: true } });
+        context.notifications = unnotifiedCompleted.map(q => ({
+            _id: q._id,
+            title: q.title,
+            xpReward: q.xpReward,
+            coinsReward: q.coinsReward
+        }));
+        if (unnotifiedCompleted.length > 0) {
+            await Quest.updateMany(
+                { _id: { $in: unnotifiedCompleted.map(q => q._id) } },
+                { $set: { notified: true } }
+            );
+        }
+
         // XP needed for next level
         const nextLevelXp = requiredXpForLevel(context.level + 1);
         context.requiredXp = nextLevelXp;
@@ -92,6 +110,7 @@ exports.getDashboard = async (req, res) => {
             xpSpentOnPreviousLevels += requiredXpForLevel(l);
         }
         context.xpInCurrentLevel = Math.max(0, (context.totalXp || 0) - xpSpentOnPreviousLevels);
+        context.xpPercentage = nextLevelXp > 0 ? Math.min(100, Math.round((context.xpInCurrentLevel / nextLevelXp) * 100)) : 0;
         res.render('dashboard', context);
     } catch (err) {
         console.error(err);
@@ -154,6 +173,22 @@ exports.getQuests = async (req, res) => {
         const quests = await ensureUserQuests(req.session.userId);
         context.quests = quests;
         context.userId = req.session.userId;
+
+        // Fetch completed quests that have not notified the user yet
+        const unnotifiedCompleted = await Quest.find({ userId: req.session.userId, status: 'completed', notified: { $ne: true } });
+        context.notifications = unnotifiedCompleted.map(q => ({
+            _id: q._id,
+            title: q.title,
+            xpReward: q.xpReward,
+            coinsReward: q.coinsReward
+        }));
+        if (unnotifiedCompleted.length > 0) {
+            await Quest.updateMany(
+                { _id: { $in: unnotifiedCompleted.map(q => q._id) } },
+                { $set: { notified: true } }
+            );
+        }
+
         res.render('quests', context);
     } catch (err) {
         console.error(err);
@@ -168,7 +203,27 @@ exports.getShop = async (req, res) => {
     }
     try {
         const shopItems = await ShopItem.find({ available: true });
-        context.shopItems = shopItems;
+        
+        // Find recent user purchases in last 24 hours
+        const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+        const userInventory = await Inventory.find({
+            userId: req.session.userId,
+            acquiredAt: { $gte: oneDayAgo }
+        });
+
+        context.shopItems = shopItems.map(item => {
+            const recentPurchase = userInventory.find(inv => inv.itemName === item.name);
+            let cooldownRemaining = null;
+            if (recentPurchase) {
+                const msRemaining = recentPurchase.acquiredAt.getTime() + (24 * 60 * 60 * 1000) - Date.now();
+                cooldownRemaining = Math.max(0, msRemaining);
+            }
+            return {
+                ...item.toObject(),
+                cooldownRemaining
+            };
+        });
+
         res.render('shop', context);
     } catch (err) {
         console.error(err);

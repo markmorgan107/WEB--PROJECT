@@ -24,6 +24,10 @@ const QuestSchema = new mongoose.Schema({
         enum: ['active', 'completed', 'pending', 'requested', 'pending_review', 'approved', 'rejected'],
         default: 'pending'
     },
+    notified: {
+        type: Boolean,
+        default: false
+    },
     difficulty: {
         type: String,
         enum: ['easy', 'medium', 'hard'],
