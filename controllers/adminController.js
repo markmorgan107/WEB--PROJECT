@@ -209,6 +209,27 @@ exports.postReviewProof = async (req, res) => {
                 user.totalXp = (user.totalXp || 0) + quest.xpReward;
                 user.level = calculateLevelFromTotalXp(user.totalXp);
                 user.coins = (user.coins || 0) + (quest.coinsReward || 0);
+
+                // Update streak: check if last completion was today or yesterday
+                const today = new Date();
+                today.setUTCHours(0, 0, 0, 0);
+                const yesterday = new Date(today);
+                yesterday.setUTCDate(today.getUTCDate() - 1);
+
+                const last = user.lastCompletedDate ? new Date(user.lastCompletedDate) : null;
+                if (last) last.setUTCHours(0, 0, 0, 0);
+
+                if (last && last.getTime() === today.getTime()) {
+                    // Already completed something today — don't change streak
+                } else if (last && last.getTime() === yesterday.getTime()) {
+                    // Completed yesterday — extend streak
+                    user.streak = (user.streak || 0) + 1;
+                } else {
+                    // Missed a day or first ever — reset to 1
+                    user.streak = 1;
+                }
+                user.lastCompletedDate = today;
+
                 await user.save();
             }
             quest.status = 'completed';

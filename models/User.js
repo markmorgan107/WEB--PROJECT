@@ -31,6 +31,14 @@ const UserSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
+    streak: {
+        type: Number,
+        default: 0
+    },
+    lastCompletedDate: {
+        type: Date,
+        default: null
+    },
     date: {
         type: Date,
         default: Date.now
