@@ -8,7 +8,13 @@ async function acceptQuest(questId) {
         });
         const result = await response.json();
         if (result.success) {
-            window.location.reload();
+            showQuestNotificationModal({
+                title: 'Quest Accepted!',
+                message: 'You have successfully started this quest.',
+                quest: result.quest,
+                buttonText: "Let's Go!",
+                hideRewards: true
+            });
         } else {
             alert(result.error || 'Failed to accept quest');
         }
@@ -47,6 +53,49 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => {
             scrollToProof(completeId);
         }, 100);
+    }
+
+    // Hijack submit proof form submission
+    const proofForm = document.getElementById('submit-proof-form');
+    if (proofForm) {
+        proofForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const submitBtn = proofForm.querySelector('button[type="submit"]');
+            const originalText = submitBtn ? submitBtn.textContent : 'Submit Proof';
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Submitting...';
+            }
+            try {
+                const formData = new FormData(proofForm);
+                const response = await fetch('/api/quests/submit-proof', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.json();
+                if (result.success) {
+                    showQuestNotificationModal({
+                        title: 'Proof Submitted!',
+                        message: 'The admin will review your proof soon.',
+                        quest: result.quest,
+                        buttonText: 'Awesome!'
+                    });
+                } else {
+                    alert(result.error || 'Failed to submit proof');
+                    if (submitBtn) {
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = originalText;
+                    }
+                }
+            } catch (err) {
+                console.error(err);
+                alert('Server error while submitting proof');
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = originalText;
+                }
+            }
+        });
     }
 });
 
@@ -151,8 +200,13 @@ async function submitQuestRequest(event) {
         });
         const result = await response.json();
         if (result.success) {
-            alert('Quest request submitted successfully! Pending admin approval.');
-            window.location.reload();
+            showQuestNotificationModal({
+                title: 'Quest Requested!',
+                message: 'Your custom quest request has been submitted for admin approval.',
+                quest: result.quest,
+                buttonText: 'Awesome!',
+                hideRewards: true
+            });
         } else {
             alert(result.error || 'Failed to submit quest request');
         }
@@ -192,3 +246,69 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 });
+
+function showQuestNotificationModal({ title, message, quest, buttonText, hideRewards }) {
+    const existing = document.getElementById('quest-completion-overlay');
+    if (existing) existing.remove();
+
+    const overlay = document.createElement('div');
+    overlay.id = 'quest-completion-overlay';
+    overlay.className = 'quest-overlay-fade-in';
+
+    const rewardsHtml = hideRewards ? '' : `
+            <div class="reward-badges">
+              <span class="badge xp-badge">+${quest.xpReward} XP</span>
+              <span class="badge coins-badge">+${quest.coinsReward} Coins</span>
+            </div>
+    `;
+
+    overlay.innerHTML = `
+      <div id="quest-completion-modal" class="quest-modal-scale-up">
+        <div class="quest-modal-header">
+          <div class="checkmark-circle">
+            <svg class="checkmark-svg" viewBox="0 0 52 52">
+              <circle class="checkmark-circle-svg" cx="26" cy="26" r="25" fill="none"/>
+              <path class="checkmark-check-svg" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+            </svg>
+          </div>
+          <h2>${title}</h2>
+          <p>${message}</p>
+        </div>
+        <div class="quest-modal-body">
+          <div class="completed-quest-item">
+            <h3 class="completed-title">${quest.title}</h3>
+            ${rewardsHtml}
+          </div>
+        </div>
+        <button id="close-quest-modal" onclick="closeAndReloadQuestModal()">${buttonText}</button>
+      </div>
+      <div class="confetti-container"></div>
+    `;
+    document.body.appendChild(overlay);
+
+    const container = overlay.querySelector('.confetti-container');
+    if (container) {
+        const colors = ['#d4af37', '#e4c252', '#3b82f6', '#22c55e', '#ec4899', '#f97316'];
+        for (let i = 0; i < 60; i++) {
+            const piece = document.createElement('div');
+            piece.className = 'confetti-piece';
+            piece.style.left = Math.random() * 100 + '%';
+            piece.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            piece.style.animationDelay = Math.random() * 1.5 + 's';
+            piece.style.animationDuration = (Math.random() * 2 + 1.5) + 's';
+            container.appendChild(piece);
+        }
+    }
+}
+
+function closeAndReloadQuestModal() {
+    const overlay = document.getElementById('quest-completion-overlay');
+    if (overlay) {
+        overlay.style.transition = 'opacity 0.3s ease';
+        overlay.style.opacity = '0';
+        setTimeout(() => {
+            overlay.remove();
+            window.location.reload();
+        }, 300);
+    }
+}
