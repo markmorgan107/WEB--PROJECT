@@ -20,6 +20,21 @@
   font-size: 14px;
 }
 
+.quest-item .quest-desc {
+  color: #9ca3af;
+  font-size: 13.5px;
+  margin-top: 4px;
+  margin-bottom: 6px;
+  line-height: 1.4;
+  max-width: 550px;
+}
+
+.quest-item .quest-meta {
+  color: #6b7280;
+  font-size: 12px;
+  margin: 0;
+}
+
 .status {
   padding: 7px 12px;
   border: 1px solid rgba(255, 255, 255, 0.15);
@@ -31,4 +46,11 @@
   background: rgba(212, 175, 55, 0.18);
   border-color: rgba(212, 175, 55, 0.35);
   color: #f5d76e;
+}
+
+.status.pending-review {
+  background: rgba(234, 179, 8, 0.15);
+  border-color: rgba(234, 179, 8, 0.35);
+  color: #fbbf24;
+  cursor: default;
 }
