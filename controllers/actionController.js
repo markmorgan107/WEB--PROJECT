@@ -63,6 +63,20 @@ exports.buyItem = async (req, res) => {
             return res.status(404).json({ error: 'Item not found' });
         }
 
+        // Check if item is on cooldown (purchased within last 24 hours)
+        const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+        const recentPurchase = await Inventory.findOne({
+            userId: req.session.userId,
+            itemName: item.name,
+            acquiredAt: { $gte: oneDayAgo }
+        });
+
+        if (recentPurchase) {
+            const timeLeftMs = recentPurchase.acquiredAt.getTime() + (24 * 60 * 60 * 1000) - Date.now();
+            const hoursLeft = Math.ceil(timeLeftMs / (1000 * 60 * 60));
+            return res.status(400).json({ error: `This item is on cooldown. Try again in ${hoursLeft} hours.` });
+        }
+
         const user = await User.findById(req.session.userId);
         if (user.coins >= item.cost) {
             user.coins -= item.cost;
@@ -78,7 +92,7 @@ exports.buyItem = async (req, res) => {
             });
             await inventoryItem.save();
 
-            return res.json({ success: true, message: 'Item purchased successfully' });
+            return res.json({ success: true, message: 'Item purchased successfully', newBalance: user.coins });
         } else {
             return res.status(400).json({ error: 'Not enough coins' });
         }
