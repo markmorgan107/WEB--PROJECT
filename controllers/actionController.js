@@ -14,7 +14,15 @@ exports.acceptQuest = async (req, res) => {
         if (quest.status === 'requested' || quest.status === 'pending' || quest.status === 'approved') {
             quest.status = 'active';
             await quest.save();
-            return res.json({ success: true, message: 'Quest accepted' });
+            return res.json({
+                success: true,
+                message: 'Quest accepted',
+                quest: {
+                    title: quest.title,
+                    xpReward: quest.xpReward,
+                    coinsReward: quest.coinsReward
+                }
+            });
         } else {
             return res.status(400).json({ error: 'Quest already active or completed' });
         }
@@ -120,7 +128,15 @@ exports.requestQuest = async (req, res) => {
         });
 
         await newQuest.save();
-        return res.json({ success: true, message: 'Quest request submitted successfully' });
+        return res.json({
+            success: true,
+            message: 'Quest request submitted successfully',
+            quest: {
+                title: newQuest.title,
+                xpReward: newQuest.xpReward,
+                coinsReward: newQuest.coinsReward
+            }
+        });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Server error' });
@@ -144,7 +160,15 @@ exports.submitProof = async (req, res) => {
     quest.proofImage = req.file.filename;
     quest.status = 'pending_review';
     await quest.save();
-    res.redirect('/quests?msg=proof_submitted');
+    return res.json({
+        success: true,
+        message: 'Proof submitted successfully',
+        quest: {
+            title: quest.title,
+            xpReward: quest.xpReward,
+            coinsReward: quest.coinsReward
+        }
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Server error' });
