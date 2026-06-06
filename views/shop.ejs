@@ -49,7 +49,15 @@
             <h4 class="card-title"><%= item.name %></h4>
             <p class="card-desc"><%= item.description %></p>
             <div class="card-price"><%= item.cost %> Coins</div>
-            <button class="btn btn-primary" style="width: 100%;" onclick="buyItem('<%= item._id %>')">Buy Reward</button>
+            <% if (typeof item.cooldownRemaining !== 'undefined' && item.cooldownRemaining > 0) { %>
+              <% const hours = Math.floor(item.cooldownRemaining / (1000 * 60 * 60)); %>
+              <% const minutes = Math.floor((item.cooldownRemaining % (1000 * 60 * 60)) / (1000 * 60)); %>
+              <button class="btn btn-outline" style="width: 100%; cursor: not-allowed; background: #222; border-color: #444; color: #777;" disabled>
+                Cooldown: <%= hours %>h <%= minutes %>m
+              </button>
+            <% } else { %>
+              <button class="btn btn-primary" style="width: 100%;" onclick="buyItem('<%= item._id %>')">Buy Reward</button>
+            <% } %>
           </div>
           <% }) %>
         <% } else { %>
