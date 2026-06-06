@@ -47,6 +47,14 @@
         </div>
       </div>
 
+      <div class="dashboard-card" style="width: 100%; margin-bottom: 40px; display: flex; align-items: center; gap: 24px;">
+        <div style="font-size: 48px; line-height: 1;">🔥</div>
+        <div>
+          <div style="font-size: 32px; font-weight: 700; color: #f97316;"><%= typeof streak !== 'undefined' ? streak : 0 %></div>
+          <div style="color: #9ca3af; font-size: 14px; margin-top: 2px;">Day Streak — complete a quest every day to keep it alive</div>
+        </div>
+      </div>
+
       <h3 style="text-align: left; width: 100%; font-size: 24px; margin-bottom: 20px;">Character Stats</h3>
       <div class="skill-tree-grid">
         <% if (typeof skills !== 'undefined' && skills.length > 0) { %>

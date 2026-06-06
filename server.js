@@ -63,6 +63,10 @@ mongoose.connect(process.env.MONGO_URI, {
                 { totalXp: { $exists: false } },
                 { $set: { totalXp: 0 } }
             );
+            await User.updateMany(
+                { streak: { $exists: false } },
+                { $set: { streak: 0, lastCompletedDate: null } }
+            );
 
             // Populate descriptions for existing quests
             const defaultQuestDescriptions = {
