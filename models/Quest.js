@@ -5,6 +5,9 @@ const QuestSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    description: {
+        type: String
+    },
     skill: {
         type: String,
         enum: ['finance','mindfulness','charisma','intellect','strength'],

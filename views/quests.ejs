@@ -129,16 +129,19 @@
                           <h4>
                             <%= quest.title %>
                           </h4>
-                          <p>+<%= quest.xpReward %> XP • <span style="text-transform: capitalize; color: #d4af37; font-size: 13px;"><%= quest.skill || 'mindfulness' %></span></p>
+                          <% if (quest.description) { %>
+                            <p class="quest-desc"><%= quest.description %></p>
+                          <% } %>
+                          <p class="quest-meta">+<%= quest.xpReward %> XP • <span style="text-transform: capitalize; color: #d4af37; font-size: 13px;"><%= quest.skill || 'mindfulness' %></span></p>
                         </div>
-                        <span class="status <%= quest.status === 'completed' ? 'done' : '' %>" <% if
+                        <span class="status <%= quest.status === 'completed' ? 'done' : (quest.status === 'pending_review' ? 'pending-review' : '') %>" <% if
                           (quest.status==='pending' ) { %> onclick="acceptQuest('<%= quest._id %>')" style="cursor:
                             pointer;" <% } %>
                               <% if (quest.status==='active' ) { %> onclick="completeQuest('<%= quest._id %>')"
                                   style="cursor: pointer;" <% } %>
                                     >
                                     <%= quest.status==='completed' ? 'Done' : (quest.status==='active' ? 'Complete'
-                                      : 'Accept' ) %>
+                                      : (quest.status==='pending_review' ? 'Pending Approval' : 'Accept' )) %>
                         </span>
                       </div>
                       <% }) %>
@@ -157,16 +160,19 @@
                           <h4>
                             <%= quest.title %>
                           </h4>
-                          <p>+<%= quest.xpReward %> XP • <span style="text-transform: capitalize; color: #d4af37; font-size: 13px;"><%= quest.skill || 'mindfulness' %></span></p>
+                          <% if (quest.description) { %>
+                            <p class="quest-desc"><%= quest.description %></p>
+                          <% } %>
+                          <p class="quest-meta">+<%= quest.xpReward %> XP • <span style="text-transform: capitalize; color: #d4af37; font-size: 13px;"><%= quest.skill || 'mindfulness' %></span></p>
                         </div>
-                        <span class="status <%= quest.status === 'completed' ? 'done' : '' %>" <% if
+                        <span class="status <%= quest.status === 'completed' ? 'done' : (quest.status === 'pending_review' ? 'pending-review' : '') %>" <% if
                           (quest.status==='pending' ) { %> onclick="acceptQuest('<%= quest._id %>')" style="cursor:
                             pointer;" <% } %>
                               <% if (quest.status==='active' ) { %> onclick="completeQuest('<%= quest._id %>')"
                                   style="cursor: pointer;" <% } %>
                                     >
                                     <%= quest.status==='completed' ? 'Done' : (quest.status==='active' ? 'Complete'
-                                      : 'Accept' ) %>
+                                      : (quest.status==='pending_review' ? 'Pending Approval' : 'Accept' )) %>
                         </span>
                       </div>
                       <% }) %>
@@ -185,16 +191,19 @@
                           <h4>
                             <%= quest.title %>
                           </h4>
-                          <p>+<%= quest.xpReward %> XP • <span style="text-transform: capitalize; color: #d4af37; font-size: 13px;"><%= quest.skill || 'mindfulness' %></span></p>
+                          <% if (quest.description) { %>
+                            <p class="quest-desc"><%= quest.description %></p>
+                          <% } %>
+                          <p class="quest-meta">+<%= quest.xpReward %> XP • <span style="text-transform: capitalize; color: #d4af37; font-size: 13px;"><%= quest.skill || 'mindfulness' %></span></p>
                         </div>
-                        <span class="status <%= quest.status === 'completed' ? 'done' : '' %>" <% if
+                        <span class="status <%= quest.status === 'completed' ? 'done' : (quest.status === 'pending_review' ? 'pending-review' : '') %>" <% if
                           (quest.status==='pending' ) { %> onclick="acceptQuest('<%= quest._id %>')" style="cursor:
                             pointer;" <% } %>
                               <% if (quest.status==='active' ) { %> onclick="completeQuest('<%= quest._id %>')"
                                   style="cursor: pointer;" <% } %>
                                     >
                                     <%= quest.status==='completed' ? 'Done' : (quest.status==='active' ? 'Complete'
-                                      : 'Accept' ) %>
+                                      : (quest.status==='pending_review' ? 'Pending Approval' : 'Accept' )) %>
                         </span>
                       </div>
                       <% }) %>
@@ -213,7 +222,7 @@
             <h2>Upload Proof for Completed Quest</h2>
             <p>Select one of your active quests and upload a photo as proof for admin review.</p>
         </div>
-        <form action="/api/quests/submit-proof" method="POST" enctype="multipart/form-data" style="display:flex; flex-direction:column; gap:15px; max-width:400px; margin:auto;">
+        <form id="submit-proof-form" action="/api/quests/submit-proof" method="POST" enctype="multipart/form-data" style="display:flex; flex-direction:column; gap:15px; max-width:400px; margin:auto;">
             <label for="questId" style="color:#9ca3af;">Select Quest:</label>
             <select name="questId" id="questId" required style="padding:10px; border-radius:5px; background:#222; color:white; border:1px solid #333;">
                 <% if (typeof quests !== 'undefined') { %>

@@ -64,6 +64,28 @@ mongoose.connect(process.env.MONGO_URI, {
                 { $set: { totalXp: 0 } }
             );
 
+            // Populate descriptions for existing quests
+            const defaultQuestDescriptions = {
+                'Drink 2 Liters of Water': 'Stay hydrated',
+                'Make the bed': 'Start the day right',
+                'No phone for 30 mins after waking': 'Mindful morning',
+                'Read 15 pages': 'Read a non-fiction book',
+                'Clean workspace': 'Organize your desk',
+                '20-minute walk': 'Get some fresh air',
+                '45-minute strict workout': 'Push your limits',
+                'Deep work block (2 Hours)': 'Uninterrupted focus'
+            };
+            for (const [title, desc] of Object.entries(defaultQuestDescriptions)) {
+                await Quest.updateMany(
+                    { title, description: { $exists: false } },
+                    { $set: { description: desc } }
+                );
+            }
+            await Quest.updateMany(
+                { description: { $exists: false } },
+                { $set: { description: 'Complete this quest to earn XP and level up your discipline.' } }
+            );
+
             const adminCount = await User.countDocuments({ isAdmin: true });
             let defaultAdmin;
             if (adminCount === 0) {
