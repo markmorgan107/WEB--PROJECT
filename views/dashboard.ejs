@@ -64,7 +64,13 @@
   <section style="padding-top: 150px; min-height: 100vh;">
     <div class="dashboard-card">
       <div class="profile-top">
-        <div class="avatar">A</div>
+        <% if (typeof profilePicture !== 'undefined' && profilePicture) { %>
+          <div class="avatar" style="background-image: url('<%= profilePicture %>'); background-size: cover; background-position: center;">
+        <% } else { %>
+          <div class="avatar">
+        <% } %>
+          <% if (typeof profilePicture === 'undefined' || !profilePicture) { %><%= typeof initial !== 'undefined' ? initial : 'A' %><% } %>
+        </div>
         <div>
           <h3><%= typeof username !== 'undefined' ? username : 'Alex Carter' %></h3>
           <p>Level <%= typeof level !== 'undefined' ? level : 8 %> • Productivity Builder</p>
@@ -99,29 +105,63 @@
         </script>
       </div>
 
-      <div class="quest-list">
-        <% if (typeof quests !== 'undefined' && quests.length > 0) { %>
-          <% quests.forEach(quest => { %>
-          <div class="quest-item">
-            <div>
-              <h4><%= quest.title %></h4>
-              <% if (quest.description) { %>
-                <p class="quest-desc"><%= quest.description %></p>
-              <% } %>
-              <p class="quest-meta">+<%= quest.xpReward %> XP • <span style="text-transform: capitalize; color: #d4af37; font-size: 13px;"><%= quest.skill || 'mindfulness' %></span></p>
+      <!-- ACTIVE / ACCEPTED QUESTS -->
+      <% if (typeof activeQuests !== 'undefined' && activeQuests.length > 0) { %>
+        <div style="margin-bottom: 28px;">
+          <h4 style="color: #22c55e; font-size: 15px; font-weight: 700; margin-bottom: 14px; letter-spacing: 0.5px; display: flex; align-items: center; gap: 8px;">
+            <span style="display:inline-block; width:10px; height:10px; border-radius:50%; background:#22c55e; box-shadow:0 0 8px #22c55e;"></span>
+            My Active Quests
+          </h4>
+          <div class="quest-list">
+            <% activeQuests.forEach(quest => { %>
+            <div class="quest-item" style="border-left: 3px solid #22c55e; background: rgba(34,197,94,0.06);">
+              <div>
+                <h4><%= quest.title %></h4>
+                <% if (quest.description) { %>
+                  <p class="quest-desc"><%= quest.description %></p>
+                <% } %>
+                <p class="quest-meta">+<%= quest.xpReward %> XP • <span style="text-transform: capitalize; color: #d4af37; font-size: 13px;"><%= quest.skill || 'mindfulness' %></span></p>
+              </div>
+              <span class="status <%= quest.status === 'pending_review' ? 'pending-review' : '' %>"
+                <% if (quest.status === 'active') { %> onclick="completeQuest('<%= quest._id %>')" style="cursor: pointer;" <% } %>
+              >
+                <%= quest.status === 'pending_review' ? 'Pending Approval' : 'Complete' %>
+              </span>
             </div>
-            <span class="status <%= quest.status === 'completed' ? 'done' : (quest.status === 'pending_review' ? 'pending-review' : '') %>"
-              <% if (quest.status === 'pending') { %> onclick="acceptQuest('<%= quest._id %>')" style="cursor: pointer;" <% } %>
-              <% if (quest.status === 'active') { %> onclick="completeQuest('<%= quest._id %>')" style="cursor: pointer;" <% } %>
-            >
-              <%= quest.status === 'completed' ? 'Done' : (quest.status === 'active' ? 'Complete' : (quest.status === 'pending_review' ? 'Pending Approval' : 'Accept')) %>
-            </span>
+            <% }) %>
           </div>
-          <% }) %>
-        <% } else { %>
-          <p style="color: #9ca3af;">No active quests found.</p>
-        <% } %>
-      </div>
+        </div>
+      <% } %>
+
+      <!-- AVAILABLE / PENDING QUESTS -->
+      <% if (typeof pendingQuests !== 'undefined' && pendingQuests.length > 0) { %>
+        <div>
+          <h4 style="color: #9ca3af; font-size: 15px; font-weight: 700; margin-bottom: 14px; letter-spacing: 0.5px; display: flex; align-items: center; gap: 8px;">
+            <span style="display:inline-block; width:10px; height:10px; border-radius:50%; background:#d4af37; box-shadow:0 0 8px #d4af37;"></span>
+            Available Quests
+          </h4>
+          <div class="quest-list">
+            <% pendingQuests.forEach(quest => { %>
+            <div class="quest-item">
+              <div>
+                <h4><%= quest.title %></h4>
+                <% if (quest.description) { %>
+                  <p class="quest-desc"><%= quest.description %></p>
+                <% } %>
+                <p class="quest-meta">+<%= quest.xpReward %> XP • <span style="text-transform: capitalize; color: #d4af37; font-size: 13px;"><%= quest.skill || 'mindfulness' %></span></p>
+              </div>
+              <span class="status" onclick="acceptQuest('<%= quest._id %>')" style="cursor: pointer;">
+                Accept
+              </span>
+            </div>
+            <% }) %>
+          </div>
+        </div>
+      <% } %>
+
+      <% if ((typeof activeQuests === 'undefined' || activeQuests.length === 0) && (typeof pendingQuests === 'undefined' || pendingQuests.length === 0)) { %>
+        <p style="color: #9ca3af;">No quests found. Head to <a href="/quests" style="color:#d4af37;">Quests</a> to get started!</p>
+      <% } %>
     </div>
   </section>
 
