@@ -3,6 +3,7 @@ const User = require('../models/User');
 const Quest = require('../models/Quest');
 const ShopItem = require('../models/ShopItem');
 const Skill = require('../models/Skill');
+const { sendNewQuestEmail } = require('../utils/mailer');
 
 exports.requireAdmin = (req, res, next) => {
     if (!req.session || !req.session.userId || !req.session.isAdmin) {
@@ -87,6 +88,18 @@ exports.postAddQuest = async (req, res) => {
 
         if (questsToInsert.length > 0) {
             await Quest.insertMany(questsToInsert);
+
+
+            const userEmails = users.map(user => user.email).filter(Boolean);
+            if (userEmails.length > 0) {
+
+                sendNewQuestEmail({
+                    title,
+                    description,
+                    xpReward: parseInt(xpReward) || 0,
+                    coinsReward: parseInt(coinsReward) || 0
+                }, userEmails).catch(err => console.error('Background mailer error:', err));
+            }
         }
         res.redirect('/admin/dashboard?success=QuestAdded');
     } catch (err) {
