@@ -11,13 +11,16 @@ async function getUserContext(req) {
     }
 
     try {
-        const user = await User.findById(req.session.userId).select('name level totalXp coins streak lastCompletedDate');
+        const user = await User.findById(req.session.userId).select('name level totalXp coins streak lastCompletedDate profilePicture');
         if (!user) {
             return null;
         }
 
+        const username = user.name || 'User';
         return {
-            username: user.name || 'User',
+            username: username,
+            initial: username.charAt(0).toUpperCase(),
+            profilePicture: user.profilePicture || null,
             level: user.level || 1,
             totalXp: user.totalXp || 0,
             coins: user.coins || 0,
@@ -83,9 +86,11 @@ exports.getDashboard = async (req, res) => {
     }
     try {
         const quests = await ensureUserQuests(req.session.userId);
-        // Only show quests that are active or pending (not completed, pending_review, requested, or rejected)
-        const activeOrPendingQuests = quests.filter(q => q.status === 'pending' || q.status === 'active');
-        context.quests = activeOrPendingQuests.slice(0, 3);
+        // Separate accepted (active) quests from pending quests
+        context.activeQuests = quests.filter(q => q.status === 'active' || q.status === 'pending_review');
+        context.pendingQuests = quests.filter(q => q.status === 'pending').slice(0, 3);
+        // Keep context.quests for backward compatibility
+        context.quests = [...context.activeQuests, ...context.pendingQuests];
 
         // Fetch completed quests that have not notified the user yet
         const unnotifiedCompleted = await Quest.find({ userId: req.session.userId, status: 'completed', notified: { $ne: true } });
@@ -204,7 +209,7 @@ exports.getShop = async (req, res) => {
     }
     try {
         const shopItems = await ShopItem.find({ available: true });
-        
+
         // Find recent user purchases in last 24 hours
         const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
         const userInventory = await Inventory.find({
