@@ -346,10 +346,9 @@ section {
 }
 
 .founder-card {
-  display: grid;
-  grid-template-columns: 380px 1fr;
-  gap: 40px;
-  align-items: center;
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
 }
 
 .founder-image {
@@ -374,6 +373,7 @@ section {
 .founder-text p {
   color: #b0b7c3;
   max-width: 700px;
+  margin: 0 auto;
 }
 
 .contact-section {
