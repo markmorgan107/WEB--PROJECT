@@ -2,10 +2,7 @@ const nodemailer = require('nodemailer');
 
 // gmail smtp api
 const transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    port: 587,
-    secure: false,
-    family: 4,
+    service: 'gmail',
     auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS
@@ -49,7 +46,7 @@ async function sendNewQuestEmail(questDetails, userEmails) {
                     </div>
                 </div>
                 <div style="text-align: center; margin-top: 35px; margin-bottom: 20px;">
-                    <a href="http://localhost:3000/quests" style="background-color: #d4af37; color: #0c0c0c; text-decoration: none; padding: 12px 36px; border-radius: 30px; font-weight: bold; font-size: 16px; display: inline-block; box-shadow: 0 4px 15px rgba(212,175,55,0.3); transition: all 0.3s ease;">Accept Quest Now</a>
+                    <a href="${process.env.APP_URL || 'http://localhost:3000'}/quests" style="background-color: #d4af37; color: #0c0c0c; text-decoration: none; padding: 12px 36px; border-radius: 30px; font-weight: bold; font-size: 16px; display: inline-block; box-shadow: 0 4px 15px rgba(212,175,55,0.3); transition: all 0.3s ease;">Accept Quest Now</a>
                 </div>
                 <hr style="border: 0; border-top: 1px solid #262626; margin: 30px 0;">
                 <div style="text-align: center; color: #737373; font-size: 12px; line-height: 1.5;">
