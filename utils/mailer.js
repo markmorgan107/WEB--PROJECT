@@ -25,7 +25,8 @@ async function sendNewQuestEmail(questDetails, userEmails) {
     }
 
     const { title, description, xpReward, coinsReward } = questDetails;
-    const appUrl = process.env.APP_URL || 'http://localhost:3000';
+    // Clean up trailing slash if present to prevent double slashes like //quests
+    const appUrl = (process.env.APP_URL || 'http://localhost:3000').replace(/\/+$/, '');
 
     const mailSubject = `New Quest Available: ${title}! 🎯`;
     const mailText = `Hey hero!\n\nA new quest has just been posted on Level Up Life:\n\n✨ ${title} ✨\n${description || 'No description provided.'}\n\nRewards:\n📈 +${xpReward} XP\n🪙 +${coinsReward} Coins\n\nLog in now to accept the quest and level up your life!\n\nBest,\nLevel Up Life Team`;
